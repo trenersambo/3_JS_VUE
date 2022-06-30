@@ -1,0 +1,28 @@
+[  
+  {
+    "id": 0,
+    "name": "SAMBO",
+    "man": 25,
+    "max": 30,
+    "img":"tiger.png",
+    "reg": true
+  },
+  {
+    "id": 1,
+    "name": "BJJ",
+    "man": 35,
+    "max": 35, 
+    "img":"panda1.png",   
+    "reg": false
+  },
+  {
+    "id": 2,
+    "name": "Judo",
+    "man": 10,
+    "max": 20, 
+    "img":"panda2.png",   
+    "reg": true
+  }         
+]
+
+

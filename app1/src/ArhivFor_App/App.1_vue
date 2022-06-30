@@ -1,0 +1,43 @@
+<template>
+<div><!-- start -->
+
+<h2>Счётчик </h2>
+<button @click="getLike">likes</button>
+<button @click="getNoLike">dislikes</button>
+<div>Like: {{likes}}</div>
+
+<div>Dislike: {{dislikes}}</div>
+
+
+</div><!-- end -->
+</template>
+
+<script>
+
+export default{
+  data(){
+    return{
+      likes:0,
+      dislikes:0,
+    }
+  }, 
+
+  methods: {
+    getLike(){
+       this.likes +=1
+    },
+    getNoLike(){
+      this.dislikes +=1
+    }
+  }
+
+
+}// export default::end
+ 
+</script>
+
+<style>
+
+
+
+</style>
