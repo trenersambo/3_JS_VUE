@@ -71,14 +71,15 @@
       <hr class="w-full border-t border-gray-600 my-4" />
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
         <div
+          v-for="(tick,index) in tickers" :key="index"
           class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
         >
           <div class="px-4 py-5 sm:p-6 text-center">
             <dt class="text-sm font-medium text-gray-500 truncate">
-              WTF - USD
+              Индекс: {{index}} // {{tick.name}}  - USD    
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
-              1.11
+              {{tick.price}}
             </dd>
           </div>
           <div class="w-full border-t border-gray-200"></div>
@@ -99,7 +100,7 @@
               ></path></svg>Удалить
           </button>
         </div>
-        <div
+        <!-- <div
           class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid border-4 cursor-pointer"
         >
           <div class="px-4 py-5 sm:p-6 text-center">
@@ -185,7 +186,7 @@
                 clip-rule="evenodd"
               ></path></svg>Удалить
           </button>
-        </div>
+        </div> -->
       </dl>
       <hr class="w-full border-t border-gray-600 my-4" />
     <section class="relative">
@@ -246,7 +247,11 @@ export default {
   data() {
     return {
       ticker:'deafault', 
-      
+      tickers:[
+      {name:'Биткоин' , price: "-"},
+      {name:"Эфир" , price: "-"},
+      {name:"Дог", price: "$ 500"},
+      ],
     };
 
   },
