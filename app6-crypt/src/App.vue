@@ -194,22 +194,17 @@
         VUE - USD
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
-        <div
-          class="bg-purple-800 border w-10 h-24"
+        <div class="bg-purple-800 border w-10 h-24"
         ></div>
-        <div
-          class="bg-purple-800 border w-10 h-32"
+        <div class="bg-purple-800 border w-10 h-32"
         ></div>
-        <div
-          class="bg-purple-800 border w-10 h-48"
+        <div class="bg-purple-800 border w-10 h-48"
         ></div>
-        <div
-          class="bg-purple-800 border w-10 h-16"
+        <div class="bg-purple-800 border w-10 h-16"
         ></div>
       </div>
-      <button
-        type="button"
-        class="absolute top-0 right-0"
+      <button type="button"
+      class="absolute top-0 right-0"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -248,9 +243,9 @@ export default {
     return {
       ticker:'deafault', 
       tickers:[
-      {name:'Биткоин' , price: "-"},
-      {name:"Эфир" , price: "-"},
-      {name:"Дог", price: "$ 500"},
+      {name:'Биткоин' , price: "19415"},
+      {name:"Эфириум" , price: "1054"},
+      {name:"Догкоин", price: "$ 0.065"},
       ],
     };
 
@@ -258,7 +253,10 @@ export default {
 
   methods: {
       add(){
-        console.log (this.ticker )
+         
+        let newTicker = {name:this.ticker , price: "n/d"}
+        console.log (newTicker)
+        this.tickers.push(newTicker)
       }
     },
 
