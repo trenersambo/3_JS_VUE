@@ -266,11 +266,7 @@ export default {
   data() {
     return {
       ticker:'deafault', 
-      tickers:[
-      {name:'Биткоин' , price: "19415"},
-      {name:"Эфириум" , price: "1054"},
-      {name:"Догкоин", price: "$ 0.065"},
-      ],
+      tickers:[],
 
       sel: null,
 
