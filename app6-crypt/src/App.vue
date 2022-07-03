@@ -265,7 +265,7 @@ export default {
 
   data() {
     return {
-      ticker:'deafault', 
+      ticker:'BTC', 
       tickers:[],
 
       sel: null,
@@ -286,8 +286,12 @@ export default {
         );
         const data = await f.json();
         console.log (data);
+
+        this.tickers.find(t=> t.name===newTicker.name).price = data.USD;
+ 
+
         newTicker.price = data.USD;
-      },5000) 
+      },10000) 
 
       this.ticker=''
     },
