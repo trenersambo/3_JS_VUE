@@ -213,16 +213,16 @@
 
     <section v-if="sel" class="relative">
       <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
-        VUE - USD
+        {{sel.name}} - USD
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
-        <div class="bg-purple-800 border w-10 h-24"
+        <div class="bg-purple-700 border w-10 h-24"
         ></div>
-        <div class="bg-purple-800 border w-10 h-32"
+        <div class="bg-purple-700 border w-10 h-32"
         ></div>
-        <div class="bg-purple-800 border w-10 h-48"
+        <div class="bg-purple-700 border w-10 h-48"
         ></div>
-        <div class="bg-purple-800 border w-10 h-16"
+        <div class="bg-purple-700 border w-10 h-16"
         ></div>
       </div>
 
@@ -290,7 +290,8 @@ export default {
       removeTicket(tick, index){
       console.log (tick, index)
 
-      this.tickers = this.tickers.filter(t => t !==tick)
+      this.tickers = this.tickers.filter(t => t !==tick);
+      this.sel = null;
     },
 
 
