@@ -289,9 +289,7 @@ export default {
 
         this.tickers.find(t=> t.name===newTicker.name).price = data.USD;
  
-
-        newTicker.price = data.USD;
-      },10000) 
+      },6000) 
 
       this.ticker=''
     },
