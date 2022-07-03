@@ -224,7 +224,9 @@
         <div class="bg-purple-800 border w-10 h-16"
         ></div>
       </div>
+
       <button type="button"
+      @click="sel=null"
       class="absolute top-0 right-0"
       >
         <svg
