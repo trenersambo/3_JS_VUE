@@ -83,8 +83,8 @@
     <div
       v-for="(tick,index) in tickers" :key="index"
       @click="sel = tick"
-      :class="sel===tick ? 'border-4':'' "
-      
+       
+      :class="{'border-4': sel===tick}"
 
       class="bg-white overflow-hidden shadow rounded-lg 
       border-purple-800 border-solid cursor-pointer  "
