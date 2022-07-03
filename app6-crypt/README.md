@@ -18,5 +18,5 @@ npm run build
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-### Скормные итоги:
+### Скормные итоги (шаг_1):
 ![плашки на VueJS](src/img/Krypto_pict1.png)
