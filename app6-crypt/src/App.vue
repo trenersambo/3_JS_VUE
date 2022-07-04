@@ -41,11 +41,11 @@
             </span>
             <span class="inline-flex items-center px-2 m-1 rounded-md text-xs 
             font-medium bg-gray-300 text-gray-800 cursor-pointer">
-              BCH
+              ETH
             </span>
             <span class="inline-flex items-center px-2 m-1 rounded-md text-xs 
             font-medium bg-gray-300 text-gray-800 cursor-pointer">
-              CHD
+              LUNA
             </span>
           </div>
           <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
@@ -99,7 +99,7 @@
       </div>
       <div class="w-full border-t border-gray-200"></div>
       <button
-        @click="removeTicket(tick, index)"
+        @click.stop="removeTicket(tick, index)"
         class="flex items-center justify-center font-medium 
         w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500
         hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all 
@@ -216,14 +216,10 @@
         {{sel.name}} - USD
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
-        <div class="bg-purple-700 border w-10 h-24"
-        ></div>
-        <div class="bg-purple-700 border w-10 h-32"
-        ></div>
-        <div class="bg-purple-700 border w-10 h-48"
-        ></div>
-        <div class="bg-purple-700 border w-10 h-16"
-        ></div>
+        <div class="bg-purple-700 border w-10 h-24" ></div>
+        <div class="bg-purple-700 border w-10 h-32" ></div>
+        <div class="bg-purple-700 border w-10 h-48" ></div>
+        <div class="bg-purple-700 border w-10 h-16" ></div>
       </div>
 
       <button type="button"
