@@ -216,10 +216,11 @@
         {{sel.name}} - USD
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
-        <div class="bg-purple-700 border w-10 h-24" ></div>
-        <div class="bg-purple-700 border w-10 h-32" ></div>
-        <div class="bg-purple-700 border w-10 h-48" ></div>
-        <div class="bg-purple-700 border w-10 h-16" ></div>
+        <div 
+        v-for="(bar, index) in graph"
+        :key="index"
+        class="bg-purple-700 border w-10 h-24" ></div>
+ 
       </div>
 
       <button type="button"
@@ -291,7 +292,7 @@ export default {
         if(this.sel.name === currentTicker.name){
           this.graph.push(data.USD)
         }
-        
+
  
       },6000) 
 
