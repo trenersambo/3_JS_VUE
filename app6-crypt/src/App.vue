@@ -217,9 +217,10 @@
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
         <div 
-        v-for="(bar, index) in graph"
+        v-for="(bar, index) in normalizeGraph()"
         :key="index"
-        class="bg-purple-700 border w-10 h-24" ></div>
+        :style="{height: `${bar}%`}"  
+        class="bg-purple-700 border w-10 " ></div>
  
       </div>
 
@@ -289,13 +290,13 @@ export default {
 
         this.tickers.find(t=> t.name===currentTicker.name).price = data.USD;
 
-        if(this.sel.name === currentTicker.name){
+        if(this.sel?.name === currentTicker.name){
           this.graph.push(data.USD)
         }
 
  
       },6000) 
-
+ 
       this.ticker=''
     },
 
@@ -305,6 +306,14 @@ export default {
       this.tickers = this.tickers.filter(t => t !==tick);
       this.sel = null;
     },
+
+    normalizeGraph(){
+      const maxValue=Math.max(...this.graph);
+      const minValue=Math.min(...this.graph);
+      return this.graph.map(
+        price=>5+((price-minValue)*95/(maxValue-minValue))
+      );
+    }
 
 
     },
