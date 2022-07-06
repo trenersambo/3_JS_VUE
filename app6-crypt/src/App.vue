@@ -266,6 +266,8 @@ export default {
 
       sel: null,
 
+      graph:[],
+
     };
 
   },
@@ -273,17 +275,23 @@ export default {
   methods: {
     add(){
         
-      let newTicker = {name:this.ticker , price: "-0"}
-      console.log (newTicker)
-      this.tickers.push(newTicker);
+      let currentTicker = {
+      name:this.ticker , price: "-0"}
+        console.log (currentTicker)
+      this.tickers.push(currentTicker);
 
       setInterval(async()=>{
-        const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
+        const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
         );
         const data = await f.json();
         console.log (data);
 
-        this.tickers.find(t=> t.name===newTicker.name).price = data.USD;
+        this.tickers.find(t=> t.name===currentTicker.name).price = data.USD;
+
+        if(this.sel.name === currentTicker.name){
+          this.graph.push(data.USD)
+        }
+        
  
       },6000) 
 
