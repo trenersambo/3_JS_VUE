@@ -82,7 +82,7 @@
 
     <div
       v-for="(tick,index) in tickers" :key="index"
-      @click="sel = tick"
+      @click="select(tick)"
        
       :class="{'border-4': sel===tick}"
 
@@ -294,11 +294,16 @@ export default {
           this.graph.push(data.USD)
         }
 
- 
-      },6000) 
+      },6000);
  
       this.ticker=''
     },
+
+    
+      select(tick){
+        this.sel = tick;
+        this.graph = [];
+      },
 
       removeTicket(tick, index){
       console.log (tick, index)
