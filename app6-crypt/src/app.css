@@ -2,3 +2,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* app.css вообще можно удалить 
+т.к. в main.js уже есть подключение
+через: import './assets/tailwind.css'
+
+Но при удалении надо убрать из App.vue строку:
+<style src="./app.css"></style>
+*/
