@@ -1,5 +1,10 @@
 <template>
 
+<!-- фиксация перед выполнением дом.работы 
+Последний рабочий coomit 11-07-2022:
+commit f61bc9184f8ed4ef724a7f21fe4b7a79f0524fe8
+-->
+
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
   <div class=" w-100 h-100 opacity-80 bg-purple-800 inset-0 z-50 flex 
   items-center justify-center">
