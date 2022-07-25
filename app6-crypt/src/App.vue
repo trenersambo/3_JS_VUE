@@ -196,35 +196,65 @@ export default {
    const tickersData = localStorage.getItem("crypto-list");
    if (tickersData !==null){
       this.tickers = JSON.parse(tickersData); 
+
+      this.tickers.forEach((ticker)=>{
+        this.subscribeToUpdates(ticker.name)
+      })
    }
     
   },
 
   methods: {
-    add(){
-        
-      let currentTicker = {
-      name:this.ticker , price: "-0"}
-        console.log (currentTicker)
-      this.tickers.push(currentTicker);
 
-      localStorage.setItem("crypto-list", JSON.stringify(this.tickers))
-
-      setInterval(async()=>{
-        const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
+  subscribeToUpdates(tickerName){
+        setInterval(async()=>{
+        const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${tickerName}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
         );
         const data = await f.json();
         console.log (data);
 
-        this.tickers.find(t=> t.name===currentTicker.name).price = data.USD;
+        this.tickers.find(t=> t.name===tickerName).price = data.USD;
 
-        if(this.sel?.name === currentTicker.name){
+        if(this.sel?.name === tickerName){
           this.graph.push(data.USD)
         }
-
-      },10000);
  
-      this.ticker=''
+      },6000);
+
+      this.ticker=''      
+  },
+
+
+    add(){
+        
+      let currentTicker = 
+      {
+      name:this.ticker , 
+      price: "-0"
+      }
+        console.log (currentTicker)
+      this.tickers.push(currentTicker);
+
+      localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
+      this.subscribeToUpdates(currentTicker.name);
+
+
+      // setInterval(async()=>{
+      //   const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
+      //   );
+      //   const data = await f.json();
+      //   console.log (data);
+
+      //   this.tickers.find(t=> t.name===currentTicker.name).price = data.USD;
+
+      //   if(this.sel?.name === currentTicker.name){
+      //     this.graph.push(data.USD)
+      //   }
+
+      // },6000);
+      //      this.ticker=''
+ 
+
     },
 
     
