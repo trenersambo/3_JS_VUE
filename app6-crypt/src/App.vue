@@ -191,6 +191,15 @@ export default {
 
   },
 
+   created() {
+
+   const tickersData = localStorage.getItem("crypto-list");
+   if (tickersData !==null){
+      this.tickers = JSON.parse(tickersData); 
+   }
+    
+  },
+
   methods: {
     add(){
         
@@ -198,6 +207,8 @@ export default {
       name:this.ticker , price: "-0"}
         console.log (currentTicker)
       this.tickers.push(currentTicker);
+
+      localStorage.setItem("crypto-list", JSON.stringify(this.tickers))
 
       setInterval(async()=>{
         const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
@@ -211,7 +222,7 @@ export default {
           this.graph.push(data.USD)
         }
 
-      },6000);
+      },10000);
  
       this.ticker=''
     },
