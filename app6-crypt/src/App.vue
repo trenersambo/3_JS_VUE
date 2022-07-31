@@ -1,6 +1,8 @@
 <template>
 
-<!-- фиксация: 
+<!-- фиксация: 31/07/22 13:22 
+кнопки для пагинации вперед назад (пагинация не сделана)
+поле фильтр (фильтрует по вводу букв в input)
 -->
 
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
@@ -80,31 +82,37 @@
     </section>
 
       <hr class="w-full border-t border-gray-600 my-4" />
-  <div>
-    <button 
-    class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent 
-        shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
-        hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
-        focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-    >Назад</button>
+        <div>
+          <button 
+          class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent 
+              shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
+              hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
+              focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >Назад</button>
 
-    <button
-    class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent 
-        shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
-        hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
-        focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-    >Вперед</button> 
-    
-    <div>Фильтр: <input /> </div>
-  </div>
+          <button
+          class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent 
+              shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
+              hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
+              focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >Вперед</button> 
 
-            Тест клика на ПЛАШКУ:{{sel}}
+          <div>Фильтр: 
+            <input v-model="filter"/> 
+          </div>
+ 
+        </div>
+
+      <hr class="w-full border-t border-gray-600 my-4" />
+
+            <!-- Тест клика на ПЛАШКУ:{{sel}} -->
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
 
     <div
-      v-for="(tick,index) in tickers" :key="index"
+      v-for="(tick,index) in filteredTickers()" 
+      :key="index"
       @click="select(tick)"
-       
+
       :class="{'border-4': sel===tick}"
 
       class="bg-white overflow-hidden shadow rounded-lg 
@@ -205,6 +213,9 @@ export default {
 
       graph:[],
 
+      page: 1,
+      filter:"",
+
     };
 
   },
@@ -223,6 +234,10 @@ export default {
   },
 
   methods: {
+
+  filteredTickers(){
+    return this.tickers.filter( ticker=>ticker.name.includes(this.filter) )
+  },
 
   subscribeToUpdates(tickerName){
         setInterval(async()=>{
@@ -253,25 +268,10 @@ export default {
         console.log (currentTicker)
       this.tickers.push(currentTicker);
 
+      this.filter="";
+
       localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
       this.subscribeToUpdates(currentTicker.name);
-
-
-      // setInterval(async()=>{
-      //   const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
-      //   );
-      //   const data = await f.json();
-      //   console.log (data);
-
-      //   this.tickers.find(t=> t.name===currentTicker.name).price = data.USD;
-
-      //   if(this.sel?.name === currentTicker.name){
-      //     this.graph.push(data.USD)
-      //   }
-
-      // },6000);
-      //      this.ticker=''
- 
 
     },
 
