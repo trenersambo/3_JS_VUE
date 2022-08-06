@@ -1,7 +1,7 @@
 <template>
 
-<!-- фиксация: 31/07/22 13:22 
-кнопки для пагинации вперед назад (пагинация не сделана)
+<!-- фиксация: 06/08/22 12:50 
+кнопки для пагинации вперед назад (проблема: схлопывание при излишнем листании) 
 поле фильтр (фильтрует по вводу букв в input)
 -->
 
@@ -88,6 +88,7 @@
               shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
               hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
               focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          @click="page-=1"
           >Назад</button>
 
           <button
@@ -95,6 +96,7 @@
               shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
               hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
               focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          @click="page+=1"
           >Вперед</button> 
 
           <div>Фильтр: 
@@ -236,7 +238,14 @@ export default {
   methods: {
 
   filteredTickers(){
-    return this.tickers.filter( ticker=>ticker.name.includes(this.filter) )
+
+    const start = (this.page-1)*6;
+    const end = this.page*6;
+
+  
+    return this.tickers
+    .filter( ticker=>ticker.name.includes(this.filter) )
+    .slice(start, end);
   },
 
   subscribeToUpdates(tickerName){
@@ -252,10 +261,10 @@ export default {
           this.graph.push(data.USD)
         }
  
-      },6000);
+      },8000);
 
-      this.ticker=''      
-  },
+      this.ticker=''   
+  }, //subscribeToUpdates::end
 
 
     add(){
@@ -273,7 +282,7 @@ export default {
       localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
       this.subscribeToUpdates(currentTicker.name);
 
-    },
+    }, // add():: end
 
     
       select(tick){
