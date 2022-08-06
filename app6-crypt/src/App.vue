@@ -1,8 +1,9 @@
 <template>
 
-<!-- фиксация: 06/08/22 12:50 
-кнопки для пагинации вперед назад (проблема: схлопывание при излишнем листании) 
-поле фильтр (фильтрует по вводу букв в input)
+<!-- фиксация: 06/08/22 13:45 
+кнопки для пагинации вперед назад 
+Появление/исчезновение кнопок "Вперед" "Назад" 
+поле фильтр (фильтрует по вводу букв в поле "Фильтр")
 -->
 
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
@@ -97,6 +98,7 @@
               shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 
               hover:bg-gray-700 transition-colors duration-300 focus:outline-none 
               focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          v-if="hasNextPage"
           @click="page+=1"
           >Вперед</button> 
 
@@ -219,6 +221,8 @@ export default {
       page: 1,
       filter:"",
 
+      hasNextPage:true,
+
     };
 
   },
@@ -244,9 +248,14 @@ export default {
     const end = this.page*6;
 
   
-    return this.tickers
-    .filter( ticker=>ticker.name.includes(this.filter) )
-    .slice(start, end);
+   const filteredTickers = this.tickers
+    .filter( ticker=>ticker.name.includes(this.filter) 
+    );
+
+    this.hasNextPage = filteredTickers.length > end;
+
+
+    return filteredTickers.slice(start, end);
   },
 
   subscribeToUpdates(tickerName){
