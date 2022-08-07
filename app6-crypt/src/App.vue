@@ -1,10 +1,11 @@
 <template>
 
-<!-- фиксация: 07/08/22 08:35 
-кнопки для пагинации вперед назад 
-Появление/исчезновение кнопок "Вперед" "Назад" 
-поле фильтр (фильтрует по вводу букв в поле "Фильтр")
-watch: Фикс проблемы со схлопыванием после ввода в Фильтр на последн.странице
+<!-- фиксация: 07/08/22 11:30 
+ИТОГ (в основном JS):
+1. Сохранение данных в localStorage
+2. Работа с адресной строкой (покажет что ищем и № страницы)
+3. Кнопки Вперед Назад (пагинация)
+4. Фильтрация не сбрасывается при обнолении страницы
 -->
 
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
@@ -230,6 +231,18 @@ export default {
 
    created() {
 
+   const windowData = Object.fromEntries(new URL(window.location).searchParams.entries())
+
+   if(windowData.filter){
+    this.filter = windowData.filter;
+   }
+      if(windowData.page){
+    this.page = windowData.page;
+   }
+
+
+
+
    const tickersData = localStorage.getItem("crypto-list");
    if (tickersData !==null){
       this.tickers = JSON.parse(tickersData); 
@@ -270,7 +283,7 @@ export default {
           this.graph.push(data.USD)
         }
  
-      },5000);
+      },60000);
 
       this.ticker=''   
   }, //subscribeToUpdates::end
@@ -320,10 +333,24 @@ export default {
     watch:{
       filter(){
         this.page = 1;
+        window.history.pushState(
+          null,
+          document.title,
+          `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+        );
+      },
+
+      page(){
+          window.history.pushState(
+          null,
+          document.title,
+          `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+          );
       }
-     }
 
+     }//watch:: end
 
+      
 
 
  
