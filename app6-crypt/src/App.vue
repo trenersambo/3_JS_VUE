@@ -1,9 +1,10 @@
 <template>
 
-<!-- фиксация: 06/08/22 13:45 
+<!-- фиксация: 07/08/22 08:35 
 кнопки для пагинации вперед назад 
 Появление/исчезновение кнопок "Вперед" "Назад" 
 поле фильтр (фильтрует по вводу букв в поле "Фильтр")
+Фикс проблемы со схлопыванием после ввода в Фильтр на последн.странице
 -->
 
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
@@ -249,11 +250,9 @@ export default {
 
   
    const filteredTickers = this.tickers
-    .filter( ticker=>ticker.name.includes(this.filter) 
-    );
+    .filter( ticker=>ticker.name.includes(this.filter) );
 
     this.hasNextPage = filteredTickers.length > end;
-
 
     return filteredTickers.slice(start, end);
   },
@@ -271,7 +270,7 @@ export default {
           this.graph.push(data.USD)
         }
  
-      },30000);
+      },5000);
 
       this.ticker=''   
   }, //subscribeToUpdates::end
@@ -317,6 +316,12 @@ export default {
 
 
     },
+
+    watch:{
+      filter(){
+        this.page = 1;
+      }
+     }
 
 
 
