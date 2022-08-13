@@ -213,24 +213,23 @@ export default {
 
   data() {
     return {
-      ticker:'BTC', 
-      tickers:[],
+      ticker:'BTC', //поле ввода "Тикер"
+      filter:"",  //поле ввода "Фильтр"
 
-      sel: null,
+      tickers:[], //массив валют с Сервера
+      sel: null,  //текущая валюта 
 
-      graph:[],
+      graph:[], // график цены выбранной Крипты
 
-      page: 1,
-      filter:"",
-
-      hasNextPage:true,
+      page: 1, // страница (ориентир )
+      hasNextPage:true, //флаг для продолжения пагинации
 
     };
 
   },
 
    created() {
-
+  //грузим данные из url (в адресной строке пишет  localhost:8080/?filter=&page=1)
    const windowData = Object.fromEntries(new URL(window.location).searchParams.entries())
 
    if(windowData.filter){
@@ -241,7 +240,7 @@ export default {
    }
 
 
-
+//грузит данные из localStorage (в котором сохраняются данные о выбранных валютах)
 
    const tickersData = localStorage.getItem("crypto-list");
    if (tickersData !==null){
@@ -256,20 +255,24 @@ export default {
 
   methods: {
 
-  filteredTickers(){
 
+  filteredTickers(){
+//подготовка для постраничной нарезки через slice(start, end) (для пагинации )
     const start = (this.page-1)*6;
     const end = this.page*6;
 
-  
+ //работа Фильтра: вывод всех валют, которые попали под условие фильтрации 
    const filteredTickers = this.tickers
     .filter( ticker=>ticker.name.includes(this.filter) );
 
+// для появления кнопки "Вперед" (проверка наличия следующих элементов)
     this.hasNextPage = filteredTickers.length > end;
 
+// нарезка по страницам (для перелистывания по 6 страниц)
     return filteredTickers.slice(start, end);
   },
 
+//обновление Валют с Сервера 
   subscribeToUpdates(tickerName){
         setInterval(async()=>{
         const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${tickerName}&tsyms=USD&api_key=a039243189c235cf1c0939e6e44a049ac7407df5e2f7ea9f7c3929a1156e3199`
@@ -283,12 +286,12 @@ export default {
           this.graph.push(data.USD)
         }
  
-      },60000);
+      },8000);
 
       this.ticker=''   
   }, //subscribeToUpdates::end
 
-
+//логика кнопки "Добавить"
     add(){
         
       let currentTicker = 
@@ -306,19 +309,19 @@ export default {
 
     }, // add():: end
 
-    
+ //логика клика выбора для появления в Графике   
       select(tick){
         this.sel = tick;
         this.graph = [];
       },
-
+// логика кнопки "удалить" Валюту из выбранных
       removeTicket(tick, index){
       console.log (tick, index)
 
       this.tickers = this.tickers.filter(t => t !==tick);
       this.sel = null;
     },
-
+//логика , что бы График показывал динамику цены выбранной валюты корректно
     normalizeGraph(){
       const maxValue=Math.max(...this.graph);
       const minValue=Math.min(...this.graph);
@@ -331,6 +334,8 @@ export default {
     },
 
     watch:{
+
+    //Следит, если изменился Фильтр, то меняет запись url вадресной строке
       filter(){
         this.page = 1;
         window.history.pushState(
@@ -339,7 +344,7 @@ export default {
           `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
         );
       },
-
+    //Следит, если изменилась Страница, то меняет запись url вадресной строке
       page(){
           window.history.pushState(
           null,
