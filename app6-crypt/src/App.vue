@@ -1,11 +1,8 @@
 <template>
 
-<!-- фиксация: 07/08/22 11:30 
-ИТОГ (в основном JS):
-1. Сохранение данных в localStorage
-2. Работа с адресной строкой (покажет что ищем и № страницы)
-3. Кнопки Вперед Назад (пагинация)
-4. Фильтрация не сбрасывается при обнолении страницы
+<!-- фиксация: 14/08/22 13:45 
+Рефакторинг (сегодня сложно для осознания всех правок)
+
 -->
 
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
@@ -246,7 +243,7 @@ export default {
    if (tickersData !==null){
       this.tickers = JSON.parse(tickersData); 
 
-      this.tickers.forEach((ticker)=>{
+      this.tickers.forEach((ticker)=>{ 
         this.subscribeToUpdates(ticker.name)
       })
    }
@@ -294,6 +291,13 @@ export default {
       price=>5+((price-minValue)*95/(maxValue-minValue))
     );
   },
+
+    pageStateOptions(){
+      return{
+        filter:this.filter,
+        page: this.page,
+      }
+    },
 
 
   
@@ -369,16 +373,17 @@ export default {
     },
 
     watch:{
-  //когда меняется ТекущаяВалюта то График обнулить
+  //когда меняется выбор ПлашкиВалюты -> График обнулить
   selectedTicker(){
       this.graph = [];
   },
 
+//Когд меняется массив Валют, то его пересохранить в localStorage
   tickers(newValue, oldValue){
     localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
   },
 
-  //Если удалил последнюю Плашку на стр№3, то перекинет на стр№2 и т.д.
+  //Если удалил последнюю Плашку на стр№3, то перекинет на стр№2 (Где есть Плашки) и т.д.
     paginatedTickers(){
       if(this.paginatedTickers.length ===0 && this.page > 1){
           this.page -=1;
@@ -386,26 +391,24 @@ export default {
     },
 
     //Следит, если изменился Фильтр, то меняет запись url вадресной строке
+    //в связке с pageStateOptions из computed
       filter(){
         this.page = 1;
-        window.history.pushState(
-          null,
-          document.title,
-          `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
-        );
       },
+
     //Следит, если изменилась Страница, то меняет запись url вадресной строке
-      page(){
+    //в связке с pageStateOptions из computed
+      pageStateOptions(value){
           window.history.pushState(
           null,
           document.title,
-          `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+          `${window.location.pathname}?filter=${value.filter}&page=${value.page}`
           );
       }
 
      }//watch:: end
 
-      
+     //  
 
 
  
