@@ -112,7 +112,7 @@
 
       <hr class="w-full border-t border-gray-600 my-4" />
 
-            <!-- Тест клика на ПЛАШКУ:{{sel}} -->
+            <!-- Тест клика на ПЛАШКУ:{{selectedTicker}} -->
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
 
     <div
@@ -120,7 +120,7 @@
       :key="index"
       @click="select(tick)"
 
-      :class="{'border-4': sel===tick}"
+      :class="{'border-4': selectedTicker===tick}"
 
       class="bg-white overflow-hidden shadow rounded-lg 
       border-purple-800 border-solid cursor-pointer  "
@@ -135,7 +135,7 @@
       </div>
       <div class="w-full border-t border-gray-200"></div>
       <button
-        @click.stop="removeTicket(tick, index)"
+        @click.stop="handleDelete(tick, index)"
         class="flex items-center justify-center font-medium 
         w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500
         hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all 
@@ -161,9 +161,9 @@
       v-if="tickers.length>0"
       class="w-full border-t border-gray-600 my-4" />
 
-    <section v-if="sel" class="relative">
+    <section v-if="selectedTicker" class="relative">
       <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
-        {{sel.name}} - USD
+        {{selectedTicker.name}} - USD
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
         <div 
@@ -175,7 +175,7 @@
       </div>
 
       <button type="button"
-      @click="sel=null"
+      @click="selectedTicker=null"
       class="absolute top-0 right-0"
       >
         <svg
@@ -217,7 +217,7 @@ export default {
       filter:"",  //поле ввода "Фильтр"
 
       tickers:[], //массив валют с Сервера
-      sel: null,  //текущая валюта 
+      selectedTicker: null,  //текущая валюта 
 
       graph:[], // график цены выбранной Крипты
 
@@ -284,6 +284,12 @@ export default {
   normalizedGraph(){
     const maxValue=Math.max(...this.graph);
     const minValue=Math.min(...this.graph);
+
+    //если все графы равны, то вывод на экран одинаковые линии
+    if(maxValue ===minValue){
+      return this.graph.map(()=> 50);
+    }
+
     return this.graph.map(
       price=>5+((price-minValue)*95/(maxValue-minValue))
     );
@@ -310,10 +316,10 @@ export default {
 
         this.tickers.find(t=> t.name===tickerName).price = data.USD;
 
-        if(this.sel?.name === tickerName){
+        if(this.selectedTicker?.name === tickerName){
           this.graph.push(data.USD)
         }
- 
+        
       },8000);
 
       this.ticker=''   
@@ -327,35 +333,57 @@ export default {
       name:this.ticker , 
       price: "-0"
       }
-        console.log (currentTicker)
-      this.tickers.push(currentTicker);
+      
+      console.log (currentTicker)
+
+      //this.tickers.push(currentTicker);
+      this.tickers = [...this.tickers, currentTicker];
 
       this.filter="";
 
-      localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
+     // localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
       this.subscribeToUpdates(currentTicker.name);
 
     }, // add():: end
 
  //логика клика выбора для появления в Графике   
       select(tick){
-        this.sel = tick;
-        this.graph = [];
+        this.selectedTicker = tick;
+
       },
+
 // логика кнопки "удалить" Валюту из выбранных
-      removeTicket(tick, index){
+      handleDelete(tick, index){
       console.log (tick, index)
 
       this.tickers = this.tickers.filter(t => t !==tick);
-      this.sel = null;
-    },
-
-
-
+      // this.selectedTicker = null;
+      
+      //Удалю ПлашкуВалюты=>Исчезнет включенный График
+      if(this.selectedTicker === tick){
+        this.selectedTicker = null;
+        }
+      },
+      
 
     },
 
     watch:{
+  //когда меняется ТекущаяВалюта то График обнулить
+  selectedTicker(){
+      this.graph = [];
+  },
+
+  tickers(newValue, oldValue){
+    localStorage.setItem("crypto-list", JSON.stringify(this.tickers));
+  },
+
+  //Если удалил последнюю Плашку на стр№3, то перекинет на стр№2 и т.д.
+    paginatedTickers(){
+      if(this.paginatedTickers.length ===0 && this.page > 1){
+          this.page -=1;
+        }
+    },
 
     //Следит, если изменился Фильтр, то меняет запись url вадресной строке
       filter(){
