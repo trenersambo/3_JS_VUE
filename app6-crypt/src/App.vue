@@ -227,7 +227,18 @@ export default {
 
    created() {
   //грузим данные из url (в адресной строке пишет  localhost:8080/?filter=&page=1)
-   const windowData = Object.fromEntries(new URL(window.location).searchParams.entries())
+   const windowData = Object.fromEntries(
+   new URL(window.location).searchParams.entries()
+   );
+
+//замена if(windowData.filter){...} ниже-но пока не ясно
+  //  const VALID_KEYS = ["filter" , "page"];
+  //  VALID_KEYS.forEach(key =>{
+  //   if (windowData[key]){
+  //     this[key = windowData[key];
+  //   }
+  //  });
+   
 
    if(windowData.filter){
     this.filter = windowData.filter;
