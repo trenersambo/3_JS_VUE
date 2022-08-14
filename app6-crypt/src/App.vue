@@ -116,7 +116,7 @@
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
 
     <div
-      v-for="(tick,index) in filteredTickers()" 
+      v-for="(tick,index) in paginatedTickers" 
       :key="index"
       @click="select(tick)"
 
@@ -167,7 +167,7 @@
       </h3>
       <div class="flex items-end border-gray-600 border-b border-l h-64">
         <div 
-        v-for="(bar, index) in normalizeGraph()"
+        v-for="(bar, index) in normalizedGraph"
         :key="index"
         :style="{height: `${bar}%`}"  
         class="bg-purple-700 border w-10 " ></div>
@@ -222,7 +222,7 @@ export default {
       graph:[], // график цены выбранной Крипты
 
       page: 1, // страница (ориентир )
-      hasNextPage:true, //флаг для продолжения пагинации
+     // hasNextPage:true, //флаг для продолжения пагинации
 
     };
 
@@ -253,24 +253,52 @@ export default {
      
   },
 
+  computed:{
+//подготовка для постраничной нарезки через slice(start, end) (для пагинации )
+  startIndex(){
+    return(this.page - 1) *6;
+  },
+  endIndex(){
+    return this.page * 6;
+  },
+
+ //работа Фильтра: вывод всех валют, которые попали под условие фильтрации 
+  filteredTickers(){
+   return this.tickers.filter( ticker=>
+   ticker.name.includes(this.filter) 
+   );
+  },
+
+  // нарезка по страницам (для перелистывания по 6 страниц)
+  paginatedTickers(){
+      return this.filteredTickers.slice(this.startIndex, this.endIndex);
+  },
+
+// для появления кнопки "Вперед" (проверка наличия следующих элементов)
+  hasNextPage(){
+   return this.filteredTickers.length > this.endIndex;
+  },
+
+      
+//логика , что бы График показывал динамику цены выбранной валюты корректно
+  normalizedGraph(){
+    const maxValue=Math.max(...this.graph);
+    const minValue=Math.min(...this.graph);
+    return this.graph.map(
+      price=>5+((price-minValue)*95/(maxValue-minValue))
+    );
+  },
+
+
+  
+  },// computed::end
+
+
+
+
   methods: {
 
 
-  filteredTickers(){
-//подготовка для постраничной нарезки через slice(start, end) (для пагинации )
-    const start = (this.page-1)*6;
-    const end = this.page*6;
-
- //работа Фильтра: вывод всех валют, которые попали под условие фильтрации 
-   const filteredTickers = this.tickers
-    .filter( ticker=>ticker.name.includes(this.filter) );
-
-// для появления кнопки "Вперед" (проверка наличия следующих элементов)
-    this.hasNextPage = filteredTickers.length > end;
-
-// нарезка по страницам (для перелистывания по 6 страниц)
-    return filteredTickers.slice(start, end);
-  },
 
 //обновление Валют с Сервера 
   subscribeToUpdates(tickerName){
@@ -321,14 +349,8 @@ export default {
       this.tickers = this.tickers.filter(t => t !==tick);
       this.sel = null;
     },
-//логика , что бы График показывал динамику цены выбранной валюты корректно
-    normalizeGraph(){
-      const maxValue=Math.max(...this.graph);
-      const minValue=Math.min(...this.graph);
-      return this.graph.map(
-        price=>5+((price-minValue)*95/(maxValue-minValue))
-      );
-    }
+
+
 
 
     },
